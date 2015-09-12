@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from time import sleep
 from datetime import datetime
 import csv
+import os
 
 """
 Example search: https://github.com/search?l=text&q=requirements.txt+language%3APython+extension%3Atxt+in%3Apath+path%3A%2F&ref=searchresults&s=indexed&type=Code&utf8=%E2%9C%93
@@ -54,7 +55,8 @@ def parse_requirements_txt_to_one_line(requirements):
     return ",".join(libraries)
 
 
-def run(max_page=99, save_location='./data/requirements_txt.psv'):
+def run(max_page=99, save_location='/data/requirements_txt.psv'):
+    save_location = os.path.dirname(os.path.realpath(__file__)) + save_location
     with open(save_location, 'a') as open_file:
         writer = csv.writer(open_file, delimiter='|')
 

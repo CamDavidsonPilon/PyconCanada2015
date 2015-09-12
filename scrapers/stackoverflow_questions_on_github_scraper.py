@@ -4,6 +4,7 @@ import re
 from requests import get
 from bs4 import BeautifulSoup
 import time
+import os
 
 """
 Example search: https://github.com/search?l=python&o=desc&q=+%22stackoverflow.com%2Fquestions%22+language%3APython&ref=searchresults&s=indexed&type=Code&utf8=%E2%9C%93
@@ -32,7 +33,8 @@ def find_stackoverflow_questions_in_file(code):
         yield link
 
 
-def run(max_page=99, save_location='./data/github_stackover_flow_questions.csv'):
+def run(max_page=99, save_location='/data/github_stackover_flow_questions.csv'):
+    save_location = os.path.dirname(os.path.realpath(__file__)) + save_location
     with open(save_location, 'a') as open_file:
         for i in range(1, max_page + 1):
             time.sleep(5)
