@@ -12,7 +12,7 @@ Example search: https://github.com/search?l=text&q=requirements.txt+language%3AP
 # The API is being a PITA, I might just scrape the search results. Apparently I must specify a user/repo/org to search
 
 def search_results_page_url(page):
-    url = 'https://github.com/search?l=text&p=%d&o=desc&q=requirements.txt+language:Python+extension:txt+in:path+path:/&ref=searchresults&type=Code'% page
+    url = 'https://github.com/search?l=text&p=%d&o=desc&q=requirements.txt+language:Python+extension:txt+in:path+path:/&ref=searchresults&type=Code&s=indexed'% page
     return url
 
 
@@ -55,7 +55,7 @@ def parse_requirements_txt_to_one_line(requirements):
 
 
 def run(max_page=99, save_location='./data/requirements_txt.psv'):
-    with open(save_location, 'w') as open_file:
+    with open(save_location, 'a') as open_file:
         writer = csv.writer(open_file, delimiter='|')
 
         for i in range(1, max_page + 1):
