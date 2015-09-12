@@ -54,9 +54,9 @@ def parse_requirements_txt_to_one_line(requirements):
     return ",".join(libraries)
 
 
-def run(max_page=99, save_location='./data/requirements_txt.tsv'):
+def run(max_page=99, save_location='./data/requirements_txt.psv'):
     with open(save_location, 'w') as open_file:
-        writer = csv.writer(open_file, delimiter='\t\t')
+        writer = csv.writer(open_file, delimiter='|')
 
         for i in range(1, max_page + 1):
             sleep(5)
