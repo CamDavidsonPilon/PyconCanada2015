@@ -3,6 +3,7 @@
 import re
 from requests import get
 from bs4 import BeautifulSoup
+import time
 
 """
 Example search: https://github.com/search?l=python&o=desc&q=+%22stackoverflow.com%2Fquestions%22+language%3APython&ref=searchresults&s=indexed&type=Code&utf8=%E2%9C%93
@@ -11,10 +12,8 @@ Example search: https://github.com/search?l=python&o=desc&q=+%22stackoverflow.co
 # The API is being a PITA, I might just scrape the search results. Apparently I must specify a user/repo/org to search
 
 def search_results_page_url(page):
-    url = 'https://github.com/search?p=%d&l=python&o=desc&q="stackoverflow.com/questions"+language:Python&s=indexed&type=Code&utf8=✓'% page
+    url = 'https://github.com/search?p=%d&l=python&o=desc&q="stackoverflow.com/questions"+language:Python&s=indexed&type=Code'% page
     return url
-
-
 
 def yield_code_from_page(page):
     github_raw_content_url = 'https://raw.githubusercontent.com'
@@ -34,8 +33,9 @@ def find_stackoverflow_questions_in_file(code):
 
 
 def run(max_page=99, save_location='./data/github_stackover_flow_questions.csv'):
-    with open(save_location, 'w') as open_file:
+    with open(save_location, 'a') as open_file:
         for i in range(1, max_page + 1):
+            time.sleep(5)
             for code in yield_code_from_page(i):
                 for link in find_stackoverflow_questions_in_file(code):
                     open_file.write(link + "\n")
