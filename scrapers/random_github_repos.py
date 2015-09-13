@@ -1,7 +1,6 @@
 """
 This script will random select repos, check if they are python, and if so, we download them locally.
 """
-
 from random import randint
 from requests import get
 from git import Repo
@@ -13,8 +12,8 @@ from ConfigParser import ConfigParser
 config = ConfigParser()
 config.read(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'credentials.cfg'))
 
-
 TFA_token = config.get('github', 'tfa')
+
 
 def repo_endpoint_with_offset(offset):
     return append_tfa_token("""https://api.github.com/repositories?since=%d""" % (offset))
@@ -35,12 +34,8 @@ def is_python_repo(languages_breakdown):
 
     return languages_breakdown.get('Python', 0)/total > 0.33
 
-# https://github.com/CamDavidsonPilon/lifetimes.git
 def yield_repos():
-    
     while True:
-        #import pdb 
-        #pdb.set_trace()
         random_repos = get(repo_endpoint_with_offset(random_sampled_offset()))
         if random_repos.status_code == 403:
             print "sleeping for 1 hour"
@@ -79,11 +74,13 @@ def clone_repo(full_name):
 
 def run(sample_size=1):
 
-    total = 0
+    total = 0 
     for repo in yield_repos():
         total += clone_repo(repo)
+        if total >= sample_size:
+            break
 
-    print "Cloned %d repos"
+    print "Cloned %d repos." % sample_size
 
 
 if __name__ == '__main__':
