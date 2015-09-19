@@ -72,7 +72,7 @@ def clone_repo(full_name):
     return True
 
 
-def run(sample_size=1000):
+def run(sample_size=100):
 
     total = 0 
     for repo in yield_repos():
