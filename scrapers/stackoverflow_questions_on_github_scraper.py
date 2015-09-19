@@ -41,7 +41,7 @@ def find_stackoverflow_questions_in_file(code):
 
 def run(max_page=99, save_location='/data/github_stackover_flow_questions.csv'):
     save_location = os.path.dirname(os.path.realpath(__file__)) + save_location
-    with open(save_location, 'a') as open_file:
+    with open(save_location, 'ab') as open_file:
         writer = csv.writer(open_file)
 
         for i in range(1, max_page + 1):
