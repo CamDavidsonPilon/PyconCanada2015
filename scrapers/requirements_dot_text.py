@@ -57,7 +57,7 @@ def parse_requirements_txt_to_one_line(requirements):
 
 def run(max_page=99, save_location='/data/requirements_txt.psv'):
     save_location = os.path.dirname(os.path.realpath(__file__)) + save_location
-    with open(save_location, 'a') as open_file:
+    with open(save_location, 'ab') as open_file:
         writer = csv.writer(open_file, delimiter='|')
 
         for i in range(1, max_page + 1):
