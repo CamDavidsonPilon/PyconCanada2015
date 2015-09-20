@@ -1,15 +1,18 @@
 # random_pypi_repos.py
 
-import pandas as pd
-from pandas.io.html import read_html
-from random import randint
-from requests import get
+import os
 import shutil
 import urllib2
 from subprocess import call
+from random import randint
+import pandas as pd
+from pandas.io.html import read_html
+from requests import get
+
+PATH = os.path.dirname(os.path.realpath(__file__))
 
 def sample_from_list(n=10):
-    df = pd.read_csv('./scrapers/data/list_of_pypi_packages_20150920.csv', header=0)
+    df = pd.read_csv(PATH + '/data/list_of_pypi_packages_20150920.csv', header=0)
     n_packages = df.shape[0]
 
     for i in range(n):
@@ -19,7 +22,7 @@ def sample_from_list(n=10):
 
 def retrieve_tgz_from_pypi(package_name, package_name_version):
     first_letter_of_name = package_name[0]
-    outfile = "./scrapers/data/pypi/raw/%s.tar.gz"%package_name
+    outfile = PATH + "/data/pypi/raw/%s.tar.gz" % package_name
 
     url_base = lambda name, first_letter, version: "https://pypi.python.org/packages/source/%s/%s/%s.tar.gz" % (first_letter, name, version)
     url = url_base(package_name,first_letter_of_name,package_name_version)
@@ -35,7 +38,7 @@ def retrieve_tgz_from_pypi(package_name, package_name_version):
     return outfile
 
 def untar_unzip_tgz(file_location):
-    outfolder = './scrapers/data/pypi/unpacked/'
+    outfolder = PATH + '/data/pypi/unpacked/'
     call(['tar', '-zxf', file_location, '-C', outfolder])
     call(['rm', file_location])
 
