@@ -2,3 +2,4 @@ beautifulsoup4
 requests
 gitpython
 pandas
+gensim
