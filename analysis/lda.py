@@ -61,6 +61,7 @@ class CodeWalker(object):
         for subword in self.convert_camel_case_to_underscore(word).split('_'):
             if subword and len(subword) > 1 \
                and re.match('^u\w{4}$', subword) is None \
+               and re.match('^x\w{2}$', subword) is None \
                and subword not in self.stop_words:
                 yield subword
     
