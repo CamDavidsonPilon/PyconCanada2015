@@ -7,7 +7,7 @@ import keyword
 import random
 from gensim import corpora, models, similarities
 
-logging.basicConfig(format='%(levelname)s : %(message)s', level=logging.INFO)
+logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 logging.root.level = logging.INFO 
 
 
@@ -20,9 +20,7 @@ class CodeWalker(object):
 
     python_keywords = map(lambda s: s.lower(), keyword.kwlist)
 
-    python_types = ['int', 'float', 'long', 'complex', 'true', 'false', 'str', 
-                     'unicode', 'list', 'tuple', 'bytearray', 'buffer', 'xrange',
-                     'set', 'frozenset', 'dict']
+    python_types = ['true', 'false', 'none']
 
     python_builtin_functions = ['abs', 'divmod', 'input', 'open', 'staticmethod', 'all', 'enumerate', 'int', 'ord', 'str', 
                                 'any', 'eval', 'isinstance', 'pow', 'sum', 'basestring', 'execfile', 'issubclass', 'print', 
@@ -33,7 +31,7 @@ class CodeWalker(object):
                                 'round', '__import__', 'complex', 'hash', 'min', 'set', 'delattr', 'help', 'next', 'setattr', 
                                 'dict', 'hex', 'object', 'slice', 'dir', 'id', 'oct', 'sorted']
 
-    common_words = ['self', 'the', 'name', 'to', 'of', 'none', 'get', 'path', 'bhadron', 'mdst', 'data', 
+    common_words = ['self', 'the', 'name', 'to', 'of', 'get', 'path', 'bhadron', 'mdst', 'data', 
                     'error', 'value', 'this', 'text', 'key', 'cb', 'lh', 'lhcb', 'lfn', 
                     'args', 'be', 'field', 'user',  'add', 'string', 
                     'node', 'it', 'info', 'default', 'line', 'append', 'by', 'start', 'message',
@@ -71,7 +69,7 @@ class CodeWalker(object):
         for root, dirs, files in os.walk(self.folders):
             for file in files:
                 if file.endswith('.py'):
-                    if random.random() <= 1 - self.subsample_rate:
+                    if hash(file + root) % int(1./self.subsample_rate) != 0:
                         continue
                     try:
                         with open(os.path.join(root, file), 'r') as open_file:
@@ -102,7 +100,7 @@ corpora.MmCorpus.serialize(PATH + '/../scrapers/data/test_corpus.mm', corpus)
 mm = corpora.MmCorpus(PATH + '/../scrapers/data/test_corpus.mm')
 print mm
 
-num_topics = 20
+num_topics = 60
 lda = gensim.models.ldamodel.LdaModel(corpus=mm, num_topics=num_topics, id2word=corpus.dictionary, update_every=1, chunksize=10000, passes=1)
 
 for topic in lda.show_topics(num_topics):
