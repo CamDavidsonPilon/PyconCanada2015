@@ -43,7 +43,7 @@ def untar_unzip_tgz(file_location):
     call(['rm', file_location])
 
 
-def run(sample=10):
+def run(sample=50):
     s = 0
     for name, version in sample_from_list(sample):
         saved_location = retrieve_tgz_from_pypi(name, version)
