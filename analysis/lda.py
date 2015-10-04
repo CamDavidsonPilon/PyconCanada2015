@@ -4,6 +4,7 @@ import re
 import os
 import gensim
 import keyword
+import random
 from gensim import corpora, models, similarities
 
 logging.basicConfig(format='%(levelname)s : %(message)s', level=logging.INFO)
@@ -48,6 +49,9 @@ class CodeWalker(object):
 
     stop_words =  set(python_keywords + python_builtin_functions + python_types + common_words)
     
+    def __init__(self, subsample_rate=0.05):
+        self.subsample_rate = subsample_rate
+
     def convert_camel_case_to_underscore(self, word):
         return CAMELCASE_TO_UNDERSCORE_RE.sub(r'_\1', word).lower()
 
@@ -69,6 +73,8 @@ class CodeWalker(object):
         for root, dirs, files in os.walk(self.folders):
             for file in files:
                 if file.endswith('.py'):
+                    if random.random() <= 1 - self.subsample_rate:
+                        continue
                     try:
                         with open(os.path.join(root, file), 'r') as open_file:
                             lines = open_file.read()
@@ -84,6 +90,8 @@ class CodeWalker(object):
         for root, dirs, files in os.walk(self.folders):
             for file in files:
                 if file.endswith('.py'):
+                    if random.random() <= 1 - self.subsample_rate:
+                        continue
                     try:
                         with open(os.path.join(root, file), 'r') as open_file:
                             lines = open_file.read()
