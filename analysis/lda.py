@@ -13,8 +13,6 @@ logging.root.level = logging.INFO
 
 PATH = os.path.dirname(os.path.realpath(__file__))
 CAMELCASE_TO_UNDERSCORE_RE = re.compile('((?<=[a-z0-9])[A-Z]|(?!^)[A-Z](?=[a-z]))')
-dictionary = corpora.dictionary.Dictionary()
-
 
 class CodeWalker(object):
     
@@ -49,7 +47,7 @@ class CodeWalker(object):
 
     stop_words =  set(python_keywords + python_builtin_functions + python_types + common_words)
     
-    def __init__(self, subsample_rate=0.05):
+    def __init__(self, subsample_rate=0.2):
         self.subsample_rate = subsample_rate
 
     def convert_camel_case_to_underscore(self, word):
@@ -78,47 +76,34 @@ class CodeWalker(object):
                     try:
                         with open(os.path.join(root, file), 'r') as open_file:
                             lines = open_file.read()
+                            results = []
                             for raw_word in re.findall('(\w+)', lines):
                                 for clean_words in self.clean_and_split_codewords(raw_word):
-                                    yield clean_words
+                                    results.append(clean_words)
+                            yield results
                     except IOError:
                         pass
                     
-   
 
-    def iter_dictionaries(self):
-        for root, dirs, files in os.walk(self.folders):
-            for file in files:
-                if file.endswith('.py'):
-                    if random.random() <= 1 - self.subsample_rate:
-                        continue
-                    try:
-                        with open(os.path.join(root, file), 'r') as open_file:
-                            lines = open_file.read()
-                            result = []
-                            for raw_word in re.findall('(\w+)', lines):
-                                for clean_words in self.clean_and_split_codewords(raw_word):
-                                    result.append(clean_words)
-                        yield dictionary.doc2bow(result, allow_update=True)
-                    except IOError:
-                        pass
-                    
-def get_most_common_words(n=100):
-    from collections import Counter
-    c = Counter()
-    cw = CodeWalker()
-    for word in cw:
-        c.update([word])
+class Corpus(object):
 
-    return map(lambda v: v[0], c.most_common(n))
+    def __init__(self, iterator, no_below=5):
+        self.iterator = iterator
+        self.dictionary = gensim.corpora.Dictionary(self.iterator)
+        self.dictionary.filter_extremes(no_below=10)
 
-cw = CodeWalker()
-corpora.MmCorpus.serialize(PATH + '/../scrapers/data/test_corpus.mm', cw.iter_dictionaries())
+    def __iter__(self):
+        for tokens in self.iterator:
+            yield self.dictionary.doc2bow(tokens)
+
+
+corpus = Corpus(CodeWalker())
+corpora.MmCorpus.serialize(PATH + '/../scrapers/data/test_corpus.mm', corpus)
 mm = corpora.MmCorpus(PATH + '/../scrapers/data/test_corpus.mm')
 print mm
 
-num_topics=100
-lda = gensim.models.ldamodel.LdaModel(corpus=mm, num_topics=num_topics, id2word=dictionary, update_every=1, chunksize=10000, passes=1)
+num_topics = 20
+lda = gensim.models.ldamodel.LdaModel(corpus=mm, num_topics=num_topics, id2word=corpus.dictionary, update_every=1, chunksize=10000, passes=1)
 
 for topic in lda.show_topics(num_topics):
     print 
