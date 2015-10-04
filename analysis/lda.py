@@ -31,21 +31,10 @@ class CodeWalker(object):
                                 'round', '__import__', 'complex', 'hash', 'min', 'set', 'delattr', 'help', 'next', 'setattr', 
                                 'dict', 'hex', 'object', 'slice', 'dir', 'id', 'oct', 'sorted']
 
-    common_words = ['self', 'the', 'name', 'to', 'of', 'get', 'path', 'bhadron', 'mdst', 'data', 
-                    'error', 'value', 'this', 'text', 'key', 'cb', 'lh', 'lhcb', 'lfn', 
-                    'args', 'be', 'field', 'user',  'add', 'string', 
-                    'node', 'it', 'info', 'default', 'line', 'append', 'by', 'start', 'message',
-                    'init', 'that', 'code', '0000', 'model', 'index', 'size', 'each', 'on', 'an', 
-                    'obj', 'result', 'base', 'end', 'join', 'output', 'ref', 'param', 'number', 'new', 
-                    'server', 'content', 'xsc', 'time', 'feature', 'no', 'equal', 'use', 'create', 
-                    'out', 'exception', 'kwargs', 'you', 'item', 'parser', 
-                    'method', 'tree', 'project', 'are', 'token', 'parameters', 'group', 'count', 'attr',
-                    'test', 'os', 'url', 'request', 'version', 'license', 'response', 'config', 'html', 'http', 'options', 
-                    'log', 'sys', 'db', 'image', 'python', 'write', 'values', 'option', 'root',]
 
-    stop_words =  set(python_keywords + python_builtin_functions + python_types + common_words)
+    stop_words =  set(python_keywords + python_builtin_functions + python_types)
     
-    def __init__(self, subsample_rate=0.2):
+    def __init__(self, subsample_rate=0.4):
         self.subsample_rate = subsample_rate
 
     def convert_camel_case_to_underscore(self, word):
@@ -60,6 +49,7 @@ class CodeWalker(object):
         """
         for subword in self.convert_camel_case_to_underscore(word).split('_'):
             if subword and len(subword) > 1 \
+               and not subword.isdigit() \
                and re.match('^u\w{4}$', subword) is None \
                and re.match('^x\w{2}$', subword) is None \
                and subword not in self.stop_words:
@@ -86,10 +76,10 @@ class CodeWalker(object):
 
 class Corpus(object):
 
-    def __init__(self, iterator, no_below=5):
+    def __init__(self, iterator, no_below=15, no_above=0.3):
         self.iterator = iterator
         self.dictionary = gensim.corpora.Dictionary(self.iterator)
-        self.dictionary.filter_extremes(no_below=10)
+        self.dictionary.filter_extremes(no_below=no_below, no_above=no_above)
 
     def __iter__(self):
         for tokens in self.iterator:
@@ -101,7 +91,7 @@ corpora.MmCorpus.serialize(PATH + '/../scrapers/data/test_corpus.mm', corpus)
 mm = corpora.MmCorpus(PATH + '/../scrapers/data/test_corpus.mm')
 print mm
 
-num_topics = 60
+num_topics = 80
 lda = gensim.models.ldamodel.LdaModel(corpus=mm, num_topics=num_topics, id2word=corpus.dictionary, update_every=1, chunksize=10000, passes=1)
 
 for topic in lda.show_topics(num_topics):
