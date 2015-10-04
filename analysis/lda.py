@@ -69,11 +69,14 @@ class CodeWalker(object):
         for root, dirs, files in os.walk(self.folders):
             for file in files:
                 if file.endswith('.py'):
-                    with open(os.path.join(root, file), 'r') as open_file:
-                        lines = open_file.read()
-                        for raw_word in re.findall('(\w+)', lines):
-                            for clean_words in self.clean_and_split_codewords(raw_word):
-                                yield clean_words
+                    try:
+                        with open(os.path.join(root, file), 'r') as open_file:
+                            lines = open_file.read()
+                            for raw_word in re.findall('(\w+)', lines):
+                                for clean_words in self.clean_and_split_codewords(raw_word):
+                                    yield clean_words
+                    except IOError:
+                        pass
                     
    
 
@@ -81,15 +84,17 @@ class CodeWalker(object):
         for root, dirs, files in os.walk(self.folders):
             for file in files:
                 if file.endswith('.py'):
-                    with open(os.path.join(root, file), 'r') as open_file:
-                        lines = open_file.read()
-                        result = []
-                        for raw_word in re.findall('(\w+)', lines):
-                            for clean_words in self.clean_and_split_codewords(raw_word):
-                                result.append(clean_words)
-                    yield dictionary.doc2bow(result, allow_update=True)
-
-
+                    try:
+                        with open(os.path.join(root, file), 'r') as open_file:
+                            lines = open_file.read()
+                            result = []
+                            for raw_word in re.findall('(\w+)', lines):
+                                for clean_words in self.clean_and_split_codewords(raw_word):
+                                    result.append(clean_words)
+                        yield dictionary.doc2bow(result, allow_update=True)
+                    except IOError:
+                        pass
+                    
 def get_most_common_words(n=100):
     from collections import Counter
     c = Counter()
