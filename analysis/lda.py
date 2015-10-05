@@ -3,6 +3,7 @@ import logging
 import os
 import gensim
 import random
+import argparse
 from gensim import corpora, models, similarities
 from code_walker import CodeWalker
 
@@ -24,15 +25,33 @@ class Corpus(object):
             yield self.dictionary.doc2bow(tokens)
 
 
-corpus = Corpus(CodeWalker())
-corpora.MmCorpus.serialize(PATH + '/../scrapers/data/test_corpus.mm', corpus)
-mm = corpora.MmCorpus(PATH + '/../scrapers/data/test_corpus.mm')
-print mm
+def create_corpus():
+    corpus = Corpus(CodeWalker())
+    corpora.MmCorpus.serialize(PATH + '/../scrapers/data/test_corpus.mm', corpus)
+    corpus.dictionary.save_as_text(PATH + '/../scrapers/data/test_dictionary.txt')
+    
 
-num_topics = 80
-lda = gensim.models.ldamodel.LdaModel(corpus=mm, num_topics=num_topics, id2word=corpus.dictionary, update_every=1, chunksize=10000, passes=1)
+def train_model(ntopics):
+    mm = corpora.MmCorpus(PATH + '/../scrapers/data/test_corpus.mm')
+    id2word = gensim.corpora.Dictionary.load_from_text(PATH + '/../scrapers/data/test_dictionary.txt')
 
-for topic in lda.show_topics(num_topics):
-    print 
-    print topic
+    lda = gensim.models.ldamodel.LdaModel(corpus=mm, num_topics=ntopics, id2word=id2word, update_every=1, chunksize=10000, passes=1)
+
+    for topic in lda.show_topics(ntopics):
+        print 
+        print topic
+
+
+if __name__=='__main__':
+
+    parser = argparse.ArgumentParser(description='Run LDA over code.')
+    parser.add_argument('--ntopics', type=int)
+    parser.add_argument('--createdict', default=False) 
+
+    args = parser.parse_args()
+
+    if args.createdict != False:
+        create_corpus()
+    train_model(args.ntopics)
+
 
