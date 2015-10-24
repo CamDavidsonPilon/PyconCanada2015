@@ -11,9 +11,11 @@ def count_of_indents(file):
     previous_line = ""
     for line in file.readlines():
         if line.startswith("#") or line.startswith('"') or line.startswith('"""') \
-            or line.startswith("'") or line.startswith("("):
+            or line.startswith("'") or line.startswith("(") or line.startswith("u"):
+            previous_line = line
             continue
         if line.strip() == '':
+            previous_line = line
             continue
 
         delta = number_of_whitespaces(line) - number_of_whitespaces(previous_line)
@@ -43,6 +45,8 @@ def run_over_directories():
         counter = run_over_all_files(fw)
         if counter:
             most_common = counter.most_common(1)[0][0]
+            if most_common == 1 or most_common == 8:
+                print fw, counter
             results.append(most_common)
     return Counter(results)
 
