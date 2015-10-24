@@ -39,6 +39,8 @@ class FileWalker(object):
                     except IOError:
                         pass
 
+    def __repr__(self):
+        return "<FileWalker for %s>" % self.folders
 
 class CodeWalker(object):
     
