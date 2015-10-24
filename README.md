@@ -24,3 +24,98 @@ It's clear that the majority of repositories on Python are web development relat
 This is biased, as some libaries have their own requirements. For example, Pandas depends on Numpy, so it would be less common to have both Pandas and Numpy in a requirements.txt file. 
 
 ![network_graph](http://i.imgur.com/XzjKuzs.png)
+
+
+
+## Most controversial Python StackOverflow answer
+
+StackOverflow has become the most popular forum for developers to ask, answer and importantly *promote* or *demote* content. StackOverflow does something even more incredible: they expose all their interaction data (questions, answers, views, votes) through a [public query interface](http://data.stackexchange.com/). Using this, we can compute, what is the most controversial Python answer?
+
+
+To do this, we will use the following algorithm: find the answer that has an upvote/downvote ratio close to 0.5, and also has lots of votes. The former requirement is a good definition of "controversial", and the latter requirement protects use against answers with trivial counts (ex: 1 upvote and 1 downvote). Think of it as a balancing act between "how confident are we that this question is indeed the most controversial?" The following query accomplishes this (based on a similar equation in [this post](http://camdp.com/blogs/how-sort-comments-intelligently-reddit-and-hacker-))
+
+```SQL
+declare @VoteStats table (parentid int, id int, U float, D float) 
+
+insert @VoteStats
+SELECT 
+  a.parentid,
+  a.id,
+  CAST(SUM(case when (VoteTypeID = 2) then 1. else 0. end) + 1. as float) as U,
+  CAST(SUM(case when (VoteTypeID = 3) then 1. else 0. end) + 1. as float) as D
+FROM Posts q
+JOIN PostTags qt 
+  ON qt.postid = q.ID
+JOIN Tags T 
+  ON T.Id = qt.TagId
+JOIN Posts a 
+  ON q.id = a.parentid
+JOIN Votes 
+  ON Votes.PostId = a.Id
+WHERE TagName  = 'python'
+   and a.PostTypeID = 2 -- these are answers
+Group BY a.id, a.parentid
+
+set nocount off
+
+SELECT 
+ TOP 100
+ parentid,
+ id,
+ U, D,
+ ABS(0.5 - U/(U+D) - 3.5*SQRT(U*D / ((U+D) * (U+D) * (U+D+1)))) + 
+   ABS(0.5 - U/(U+D) + 3.5*SQRT(U*D / ((U+D) * (U+D) * (U+D+1)))) as Score
+FROM @VoteStats 
+ORDER BY Score 
+```
+
+Running this produces the following table (as of Oct. 24, 2015):
+
+| parentid | id      | U   | D  | Score             |
+|----------|---------|-----|----|-------------------|
+| 1641219  | 1641305 | 100 | 58 | 0.267581687129904 |
+| 366980   | 367082  | 55  | 29 | 0.360985397926758 |
+| 904928   | 904941  | 44  | 40 | 0.379197639329681 |
+| 1641219  | 1945699 | 49  | 23 | 0.382002382488145 |
+| 734368   | 734910  | 48  | 30 | 0.38315203605798  |
+| 7479442  | 7479473 | 46  | 23 | 0.394405318873308 |
+| 620367   | 620397  | 42  | 24 | 0.411383595098925 |
+| 969285   | 969324  | 49  | 20 | 0.420289855072464 |
+| 1566266  | 1566285 | 39  | 24 | 0.424918292799399 |
+
+
+The closer the score is to 0, the more controversial it is. The way to view the answer is to use the `id`:
+
+> http://stackoverflow.com/questions/<id>
+
+Take a look at the answers comment's to see debates about why the answer is controversial. 
+
+
+## 2-Spaces vs 4-Spaces
+
+Let's not argue: let's look at the empirical data. I looked at over 23 thousand Python repos and [computed what the most common](https://github.com/CamDavidsonPilon/PyconCanada2015/blob/master/analysis/indent_analysis.py) indenting practice was in each repo. The results were quite infavor of 4-spaces: **88% of repos used 4-spaces, and only 7% of repos use 2-spaces**. What about the remaining 5%? Well, some repos use 8-spaces, and some used 1-spaces! Examples: https://github.com/aqt01/UnderWaterWorld uses 8-spaces, and https://github.com/sanglech/CSC326 uses 1-space. 
+
+## What is the most popular testing framework?
+
+Passing through the tens of thousands of repos, [I looked for imports](https://github.com/CamDavidsonPilon/PyconCanada2015/blob/master/analysis/test_frameworks.py) of the most popular testing libaries: pytest, unittest, nose and testify. Here where the results:
+
+| package  | count | percent of total |
+|----------|-------|------------------|
+| None     | 22162 |       86%        |
+| unittest |  3032 |       12%        |
+| nose     |   379 |      1.5%        |
+| pytest   |   293 |        1%        |
+| testify  |     4 |       ~0%        |
+
+
+## What about using Python for functional programming?
+
+If you are going to use Python for functional programming, or semi-functional programming, you're probably going to be using libraries like `functools`, 'itertools', 'toolz' and others. How many Python repos use this style of programming? Data shows about 15% of repos do this. 
+
+
+## How often do we disobey *flat is better than nested*?
+
+
+
+
+
