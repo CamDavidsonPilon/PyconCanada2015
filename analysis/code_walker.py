@@ -6,9 +6,43 @@ PATH = os.path.dirname(os.path.realpath(__file__))
 
 CAMELCASE_TO_UNDERSCORE_RE = re.compile('((?<=[a-z0-9])[A-Z]|(?!^)[A-Z](?=[a-z]))')
 
+class DirectoryWalker(object):
+
+    folders = PATH + '/../scrapers/data/raw_repos/'
+
+    def __init__(self, subsample_rate=0.4):
+        self.subsample_rate = subsample_rate
+
+    def __iter__(self):
+        for folder in os.listdir(self.folders):
+            yield FileWalker(self.subsample_rate, folders=self.folders + folder)
+
+
+class FileWalker(object):
+
+    folders = PATH + '/../scrapers/data/'
+
+    def __init__(self, subsample_rate=0.4, folders=None):
+        if folders:
+            self.folders = folders
+        self.subsample_rate = subsample_rate
+
+    def __iter__(self):
+        for root, dirs, files in os.walk(self.folders):
+            for file in files:
+                if file.endswith('.py'):
+                    if hash(file + root) % int(1./self.subsample_rate) != 0:
+                        continue
+                    try:
+                        with open(os.path.join(root, file), 'r') as open_file:
+                            yield open_file
+                    except IOError:
+                        pass
+
+
 class CodeWalker(object):
     
-    folders = PATH + '/../scrapers/data'
+    folders = PATH + '/../scrapers/data/'
 
     python_keywords = map(lambda s: s.lower(), keyword.kwlist)
 
