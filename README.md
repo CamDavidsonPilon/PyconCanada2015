@@ -84,11 +84,7 @@ Running this produces the following table (as of Oct. 24, 2015):
 | 1566266  | http://stackoverflow.com/questions/1566285 | 39  | 24 | 0.424918292799399 |
 
 
-The closer the score is to 0, the more controversial it is. The way to view the answer is to use the `id`:
-
-> http://stackoverflow.com/questions/<id>
-
-Take a look at the answers comment's to see debates about why the answer is controversial. 
+The closer the score is to 0, the more controversial it is. Take a look at the answers comment's to see debates about why the answer is controversial. 
 
 
 ## 2-Spaces vs 4-Spaces
@@ -116,11 +112,14 @@ If you are going to use Python for functional programming, or semi-functional pr
 ## How often do we disobey *flat is better than nested*?
 
 ```
-from src.com.citrix.netscaler.nitro.resource.config.lb.lbvserver import lbvserver
+from com.sun.org.apache.xerces.internal.impl.io import \
+            MalformedByteSequenceException
 ```
-(from https://github.com/gelad0/nstoolz/blob/master/base-util.py)
+(from [here](https://github.com/kurtmckee/listparser/blob/c280d6619241cb6e46ec1f708063f0c05b28933c/listparser/__init__.py#L66-L67))
  
 Is this ugly or beautiful? Python says it's ugly - after all, *flat is better than nested*. How often we break this? For this, I looked at the *maximum* import nest in each repo. Here's the breakdown: 
 
+
+![nest_dist](http://i.imgur.com/9uq8b4M.png)
 
 
