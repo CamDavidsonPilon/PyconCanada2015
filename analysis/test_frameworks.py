@@ -9,7 +9,7 @@ def find_testing_package(fw):
     for file in fw:
         for line in file.readlines():
             line = line.lstrip()
-            if not line.startswith('import') and not line.startswith('from'):
+            if not line.startswith('import ') and not line.startswith('from '):
                 continue
 
             for testing_pkg in ['pytest', 'nose', 'unittest', 'testify']:

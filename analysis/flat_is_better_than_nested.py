@@ -22,7 +22,7 @@ def find_maximum_nest(fw):
                 if max_nest < line.count('.') + 1:
                     max_nest = line.count('.') + 1
                     line_with_max_next = line
-    return max_nest, line_with_max_next
+    return max_nest, line_with_max_next.strip()
 
 
 

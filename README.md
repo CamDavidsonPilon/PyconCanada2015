@@ -71,17 +71,17 @@ ORDER BY Score
 
 Running this produces the following table (as of Oct. 24, 2015):
 
-| parentid | id      | U   | D  | Score             |
+| parentid | url      | U   | D  | Score             |
 |----------|---------|-----|----|-------------------|
-| 1641219  | 1641305 | 100 | 58 | 0.267581687129904 |
-| 366980   | 367082  | 55  | 29 | 0.360985397926758 |
-| 904928   | 904941  | 44  | 40 | 0.379197639329681 |
-| 1641219  | 1945699 | 49  | 23 | 0.382002382488145 |
-| 734368   | 734910  | 48  | 30 | 0.38315203605798  |
-| 7479442  | 7479473 | 46  | 23 | 0.394405318873308 |
-| 620367   | 620397  | 42  | 24 | 0.411383595098925 |
-| 969285   | 969324  | 49  | 20 | 0.420289855072464 |
-| 1566266  | 1566285 | 39  | 24 | 0.424918292799399 |
+| 1641219  | http://stackoverflow.com/questions/1641305 | 100 | 58 | 0.267581687129904 |
+| 366980   | http://stackoverflow.com/questions/367082  | 55  | 29 | 0.360985397926758 |
+| 904928   | http://stackoverflow.com/questions/904941  | 44  | 40 | 0.379197639329681 |
+| 1641219  | http://stackoverflow.com/questions/1945699 | 49  | 23 | 0.382002382488145 |
+| 734368   | http://stackoverflow.com/questions/734910  | 48  | 30 | 0.38315203605798  |
+| 7479442  | http://stackoverflow.com/questions/7479473 | 46  | 23 | 0.394405318873308 |
+| 620367   | http://stackoverflow.com/questions/620397  | 42  | 24 | 0.411383595098925 |
+| 969285   | http://stackoverflow.com/questions/969324  | 49  | 20 | 0.420289855072464 |
+| 1566266  | http://stackoverflow.com/questions/1566285 | 39  | 24 | 0.424918292799399 |
 
 
 The closer the score is to 0, the more controversial it is. The way to view the answer is to use the `id`:
@@ -115,7 +115,12 @@ If you are going to use Python for functional programming, or semi-functional pr
 
 ## How often do we disobey *flat is better than nested*?
 
-
+```
+from src.com.citrix.netscaler.nitro.resource.config.lb.lbvserver import lbvserver
+```
+(from https://github.com/gelad0/nstoolz/blob/master/base-util.py)
+ 
+Is this ugly or beautiful? Python says it's ugly - after all, *flat is better than nested*. How often we break this? For this, I looked at the *maximum* import nest in each repo. Here's the breakdown: 
 
 
 
