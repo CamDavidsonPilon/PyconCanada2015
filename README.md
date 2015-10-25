@@ -19,6 +19,12 @@ This was done by scraping 10k+ Python repositories on Github that contain a `req
 It's clear that the majority of repositories on Python are web development related, or web developers are most likely to include a proper requirements.txt file in their repositories. 
 
 
+## Relationships between libraries
+
+Using the data in `requirements.txt' files, we can find common co-occurences of libraries. For example, it's not hard to imagine that whenever django is a requirement, so is
+
+[](https://github.com/CamDavidsonPilon/PyconCanada2015/blob/master/analysis/library_association_rules.csv)
+
 ## Network force-layout of libraries in `requirements.txt` files in Github Python repositories
 
 This is biased, as some libaries have their own requirements. For example, Pandas depends on Numpy, so it would be less common to have both Pandas and Numpy in a requirements.txt file. 
