@@ -21,9 +21,21 @@ It's clear that the majority of repositories on Python are web development relat
 
 ## Relationships between libraries
 
-Using the data in `requirements.txt' files, we can find common co-occurences of libraries. For example, it's not hard to imagine that whenever django is a requirement, so is
+Using the data in `requirements.txt' files, we can find common co-occurences of libraries. For example, it's not hard to imagine that whenever django is a requirement, so is psycopg2. In fact, in the dataset I had, 41% of all django apps also included psycopg2. Here are the other results for django:
 
-[](https://github.com/CamDavidsonPilon/PyconCanada2015/blob/master/analysis/library_association_rules.csv)
+|start_items | next_items      |  antecedent_occurrences |confidence     | occurrences |subsequent_occurrences |
+|------------|-----------------|-------------------------|---------------|-------------|-----------------------|
+|django      | requests        |  2714                   |0.243920412675 | 662         |2463                   |
+|django      | wheel           |  2714                   |0.22402358143  | 608         |1649                   |
+|django      | six             |  2714                   |0.245394252027 | 666         |1985                   |
+|django      | psycopg2        |  2714                   |0.411569638909 | 1117        |1573                   |
+|django      | gunicorn        |  2714                   |0.320191599116 | 869         |1531                   |
+|django      | dj-database-url |  2714                   |0.263448784083 | 715         |728                    |
+
+These relationships can be mined using a simple algorithm called the apriori algorithm. It's history goes back to large department stores that were interested in what products were commonly bought together. The naive solution, compare all possible pairs, results in a quadratic algorithm: in if you have thousands of products, this becomes inefficient quickly. The apriori algorithm intelligently cuts through this massive space. 
+
+[Here are the results for other libraries](https://github.com/CamDavidsonPilon/PyconCanada2015/blob/master/analysis/library_association_rules.csv)
+ including some metrics to sort on. To read more about these metrics, see [this link](http://michael.hahsler.net/research/association_rules/measures.html).
 
 ## Network force-layout of libraries in `requirements.txt` files in Github Python repositories
 
