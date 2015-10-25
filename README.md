@@ -21,9 +21,11 @@ It's clear that the majority of repositories on Python are web development relat
 
 ## Relationships between libraries
 
-Using the data in `requirements.txt' files, we can find common co-occurences of libraries. For example, it's not hard to imagine that whenever django is a requirement, so is psycopg2. In fact, in the dataset I had, 41% of all django apps also included psycopg2. Here are the other results for django:
+Using the data in `requirements.txt' files, we can find common co-occurences of libraries. For example, it's not hard to imagine that whenever django is a requirement, so is psycopg2. In fact, in the dataset I had, 41% of all django apps also included psycopg2. These relationships can be mined using a simple algorithm called the apriori algorithm. It's history goes back to large department stores that were interested in what products were commonly bought together. The naive solution, compare all possible pairs, results in a quadratic algorithm: in if you have thousands of products, this becomes inefficient quickly. The apriori algorithm intelligently cuts through this massive space. 
 
-|start_items | next_items      |  antecedent_occurrences |confidence     | occurrences |subsequent_occurrences |
+Here are the other common libraries paired with django:
+
+|starting_with | ending_with      |  starting_with_occurrences |confidence     | occurrences |ending_with_occurrences |
 |------------|-----------------|-------------------------|---------------|-------------|-----------------------|
 |django      | requests        |  2714                   |0.243920412675 | 662         |2463                   |
 |django      | wheel           |  2714                   |0.22402358143  | 608         |1649                   |
@@ -32,10 +34,29 @@ Using the data in `requirements.txt' files, we can find common co-occurences of 
 |django      | gunicorn        |  2714                   |0.320191599116 | 869         |1531                   |
 |django      | dj-database-url |  2714                   |0.263448784083 | 715         |728                    |
 
-These relationships can be mined using a simple algorithm called the apriori algorithm. It's history goes back to large department stores that were interested in what products were commonly bought together. The naive solution, compare all possible pairs, results in a quadratic algorithm: in if you have thousands of products, this becomes inefficient quickly. The apriori algorithm intelligently cuts through this massive space. 
 
 [Here are the results for other libraries](https://github.com/CamDavidsonPilon/PyconCanada2015/blob/master/analysis/library_association_rules.csv)
  including some metrics to sort on. To read more about these metrics, see [this link](http://michael.hahsler.net/research/association_rules/measures.html).
+
+## Now, let's recommend libaries based on these relationships
+
+So, if we know a user installed django, we can perhaps recommend that they also install psycopg2 (according to above, we would be right 41% of the time). We can turn these co-occurences into a very simple recommendation algorithm for Python Libaries! So I've gone ahead and done that. 
+
+### `pipp`: one of the `p`s stands for personalized!
+
+Yes, that's right - we can bring you library recommendations right to the command line. Try it out!
+
+`pip install pipp`
+
+```
+$ pipp install jsmin
+Requirement already satisfied (use --upgrade to upgrade): jsmin in /Users/camerondavidson-pilon/.virtualenvs/data/lib/python2.7/site-packages
+pipp: Other users who installed jsmin also installed cssmin
+```
+
+Command line too nerdy for you? How about recommendations on PyPI?
+
+![pypi](http://i.imgur.com/BCyumQV.png)
 
 ## Network force-layout of libraries in `requirements.txt` files in Github Python repositories
 
