@@ -21,9 +21,18 @@ It's clear that the majority of repositories on Python are web development relat
 
 ## Relationships between libraries
 
-Using the data in `requirements.txt' files, we can find common co-occurences of libraries. For example, it's not hard to imagine that whenever django is a requirement, so is psycopg2. In fact, in the dataset I had, 41% of all django apps also included psycopg2. These relationships can be mined using a simple algorithm called the apriori algorithm. It's history goes back to large department stores that were interested in what products were commonly bought together. The naive solution, compare all possible pairs, results in a quadratic algorithm: in if you have thousands of products, this becomes inefficient quickly. The apriori algorithm intelligently cuts through this massive space. 
+Using the data in `requirements.txt' files, we can find common co-occurences of libraries. For example, it's not hard to imagine that whenever django is a requirement, so is psycopg2. In fact, in the dataset I had, 41% of all django apps also included psycopg2. These relationships can be mined using a simple algorithm called the apriori algorithm. It's history goes back to large department stores that were interested in what products were commonly bought together. The naive solution, compare all possible pairs, results in a quadratic algorithm - and if you have thousands of products, this becomes inefficient quickly. The apriori algorithm intelligently cuts through this massive space. 
 
 Here are the other common libraries paired with django:
+
+(confidence is defined as 
+```
+confidence = P(ending_with | starting_with)
+           = P(starting_with and ending_with) / P(starting_with)
+           = #{requirement.txts with both} / #{requirement.txts with starting_with}
+
+```
+
 
 |starting_with | ending_with      |  starting_with_occurrences |confidence     | occurrences |ending_with_occurrences |
 |------------|-----------------|-------------------------|---------------|-------------|-----------------------|
@@ -64,6 +73,30 @@ This is biased, as some libaries have their own requirements. For example, Panda
 
 ![network_graph](http://i.imgur.com/XzjKuzs.png)
 
+## The Plural of Ancedote is Data!
+
+I've often heard techies say the plural of ancedote is not data. I see where they are coming from, however I think they are being shortsighted. Whereas one or two occurences of something is not enough evidence to prove a fact, it is *evidence* of something interesting. And if you have a tool to quickly confirm or deny further occurences of this anecdote, then yes you have data. For example how often do you see links to stackoverflow questions in code? I have seen it before, and I wondered, how common is this? 
+
+Using one of the greatest anecdote validation tools, Search, we can validate this idea:
+
+![search](http://i.imgur.com/kdqLVTz.png)
+
+Great, now let's start scraping. Here are the most common questions linked in Python code:
+
+```
+stackoverflow.com/questions/19622133    1173
+stackoverflow.com/questions/279237       887
+stackoverflow.com/questions/5658622      320
+stackoverflow.com/questions/22019341     134
+stackoverflow.com/questions/35817        117
+stackoverflow.com/questions/1769332       89
+stackoverflow.com/questions/377017        86
+stackoverflow.com/questions/1189781       73
+stackoverflow.com/questions/4124220       70
+stackoverflow.com/questions/701802        66
+```
+
+Let's investigate the first one. It's a very specific question about windows and ctypes - not a common problem in the first place. If we [search for just that url on Github](https://github.com/search?q=stackoverflow.com%2Fquestions%2F19622133&type=Code&utf8=%E2%9C%93), we see it's all from the same file, `windows_support.py`. Investigating those repos with the url, we see that 1. not only is this is from code inside Python 2.7, but 2. people are including all of Python 2.7 in the Github repos! 
 
 
 ## Most controversial Python StackOverflow answer
@@ -130,6 +163,8 @@ The closer the score is to 0, the more controversial it is. Take a look at the a
 
 Let's not argue: let's look at the empirical data. I looked at over 23 thousand Python repos and [computed what the most common](https://github.com/CamDavidsonPilon/PyconCanada2015/blob/master/analysis/indent_analysis.py) indenting practice was in each repo. The results were quite infavor of 4-spaces: **88% of repos used 4-spaces, and only 7% of repos use 2-spaces**. What about the remaining 5%? Well, some repos use 8-spaces, and some used 1-spaces! Examples: https://github.com/aqt01/UnderWaterWorld uses 8-spaces, and https://github.com/sanglech/CSC326 uses 1-space. 
 
+![indent](http://i.imgur.com/6jSwYrO.png)
+
 ## What is the most popular testing framework?
 
 Passing through the tens of thousands of repos, [I looked for imports](https://github.com/CamDavidsonPilon/PyconCanada2015/blob/master/analysis/test_frameworks.py) of the most popular testing libaries: pytest, unittest, nose and testify. Here where the results:
@@ -142,6 +177,8 @@ Passing through the tens of thousands of repos, [I looked for imports](https://g
 | pytest   |   293 |        1%        |
 | testify  |     4 |       ~0%        |
 
+
+![testing](http://i.imgur.com/XfgpH4O.png)
 
 ## What about using Python for functional programming?
 
