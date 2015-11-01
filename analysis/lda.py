@@ -41,6 +41,13 @@ def train_model(ntopics):
         print 
         print topic
 
+    save_model(lda)
+
+
+def save_model(model):
+    print "saving model."
+    model.save(PATH + '/../scrapers/data/saved_lda_model.model')
+
 
 if __name__=='__main__':
 

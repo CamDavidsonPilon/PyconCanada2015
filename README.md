@@ -199,3 +199,6 @@ Is this ugly or beautiful? Python says it's ugly - after all, *flat is better th
 ![nest_dist](http://i.imgur.com/9uq8b4M.png)
 
 
+## Topic Modelling
+
+In information retrieval, it is useful 
