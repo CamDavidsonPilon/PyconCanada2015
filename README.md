@@ -71,7 +71,7 @@ Command line too nerdy for you? How about recommendations on PyPI?
 
 This is biased, as some libaries have their own requirements. For example, Pandas depends on Numpy, so it would be less common to have both Pandas and Numpy in a requirements.txt file. 
 
-![network_graph](http://i.imgur.com/XzjKuzs.png)
+![network_graph](http://i.imgur.com/leWZegG.png)
 
 ## The Plural of Ancedote is Data!
 

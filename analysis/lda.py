@@ -53,7 +53,7 @@ if __name__=='__main__':
 
     parser = argparse.ArgumentParser(description='Run LDA over code.')
     parser.add_argument('--ntopics', type=int)
-    parser.add_argument('--createdict', default=False) 
+    parser.add_argument('--createdict', default=False, type=bool) 
 
     args = parser.parse_args()
 
