@@ -1,8 +1,8 @@
-PyConCanada2015
-##################
+# PyConCanada2015
 
 
-My scrapers + data + analysis for PyConCanada2015 Keynote
+
+#### My scrapers + data + analysis for PyConCanada2015 Keynote
 
 (sorry github)
 
@@ -199,6 +199,35 @@ Is this ugly or beautiful? Python says it's ugly - after all, *flat is better th
 ![nest_dist](http://i.imgur.com/9uq8b4M.png)
 
 
-## Topic Modelling
+## Topic modelling Python source code using LDA
 
-In information retrieval, it is useful 
+What happens when we apply a topic modelling algorithm, like Latent Dirichlet Allocation, to hundreds of thousands of Python source code files? To be clear: this is not something you usually do! Topic modelling is meant to articles and reviews: human-readable text. Python code, on the other hand, is full of keywords in illogical order, repeated words over and over again, and developers use odd acronymns and abbreviations for all their variables! But, let's try it anyways. 
+
+After training LDA on the repos and library I downloaded, I came out with [these topics](https://github.com/CamDavidsonPilon/PyconCanada2015/blob/master/analysis/python_topics.txt). For example, we can see the topic:
+
+> python, version, package, author, setup, description, language, copyright, packages, license
+
+obviously this is the setup.py topic
+
+> test, equal, case, tests, foo, unittest, equals, suite, result, expected
+
+this is the testing topic,
+
+> grid, color, plot, plt, label, step, data, width, ax, size
+
+the matplotlib plotting topic.
+
+
+See if you can find others in the output above. 
+
+
+## Conclusion
+
+
+What can we learn from examining ourselves in this manner? I like to use an analogy to what we are doing here. The necker cube is drawing of a rectangle that seemingly flips between two visualizations of it. One moment, you see the cube from a lower left angle, and the next moment you are stuck at the alternate angle. When we develop code, we can become very stuck in one angle: what abstraction should I make, what imports should I write, what should my testing framework be? By forcing ourselves to view code from a data point of view, we can see the other side of the necker cube. 
+
+
+![necker](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Necker_cube.svg/2000px-Necker_cube.svg.png)
+
+
+In conclusion, it is often a useful exercise to treat ourselves as datasets. 
