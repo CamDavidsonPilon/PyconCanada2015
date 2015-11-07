@@ -178,7 +178,7 @@ Passing through the tens of thousands of repos, [I looked for imports](https://g
 | testify  |     4 |       ~0%        |
 
 
-![testing](http://i.imgur.com/ShGQFlF.png)
+![testing](http://i.imgur.com/XfgpH4O.png)
 
 ## What about using Python for functional programming?
 
@@ -196,7 +196,7 @@ from com.sun.org.apache.xerces.internal.impl.io import \
 Is this ugly or beautiful? Python says it's ugly - after all, *flat is better than nested*. How often we break this? For this, I looked at the *maximum* import nest in each repo. Here's the breakdown: 
 
 
-![nest_dist](http://i.imgur.com/9uq8b4M.png)
+![nest_dist](http://i.imgur.com/ShGQFlF.png)
 
 
 ## Topic modelling Python source code using LDA
@@ -222,12 +222,3 @@ See if you can find others in the output above.
 
 
 ## Conclusion
-
-
-What can we learn from examining ourselves in this manner? I like to use an analogy to what we are doing here. The necker cube is drawing of a rectangle that seemingly flips between two visualizations of it. One moment, you see the cube from a lower left angle, and the next moment you are stuck at the alternate angle. When we develop code, we can become very stuck in one angle: what abstraction should I make, what imports should I write, what should my testing framework be? By forcing ourselves to view code from a data point of view, we can see the other side of the necker cube. 
-
-
-![necker](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Necker_cube.svg/2000px-Necker_cube.svg.png)
-
-
-In conclusion, it is often a useful exercise to treat ourselves as datasets. 
