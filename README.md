@@ -71,7 +71,7 @@ Command line too nerdy for you? How about recommendations on PyPI?
 
 This is biased, as some libaries have their own requirements. For example, Pandas depends on Numpy, so it would be less common to have both Pandas and Numpy in a requirements.txt file. 
 
-![network_graph](http://i.imgur.com/leWZegG.png)
+![network_graph](http://i.imgur.com/MesvpSa.png)
 
 ## The Plural of Ancedote is Data!
 
@@ -178,7 +178,7 @@ Passing through the tens of thousands of repos, [I looked for imports](https://g
 | testify  |     4 |       ~0%        |
 
 
-![testing](http://i.imgur.com/XfgpH4O.png)
+![testing](http://i.imgur.com/ShGQFlF.png)
 
 ## What about using Python for functional programming?
 

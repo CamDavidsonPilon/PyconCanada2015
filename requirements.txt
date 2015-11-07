@@ -3,3 +3,4 @@ requests
 gitpython
 pandas
 gensim
+networkx
